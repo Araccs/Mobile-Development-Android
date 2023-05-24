@@ -44,8 +44,9 @@ fun MyApp(onGetUserData: (String) -> Unit) {
         ) {
             Button(
                 onClick = {
-                    val userData = GetAll().getData()
-                    onGetUserData(userData)
+                    GetAll().getData { userData ->
+                        onGetUserData(userData)
+                    }
                 },
                 modifier = Modifier.size(100.dp)
             ) {
@@ -69,7 +70,10 @@ fun MyApp(onGetUserData: (String) -> Unit) {
             Spacer(modifier = Modifier.height(15.dp))
 
             Button(
-                onClick = { GetBySearch().getSearchData(textValue) },
+                onClick = { GetBySearch().getSearchData(textValue) { userData ->
+                    onGetUserData(userData)
+                }
+                          },
                 modifier = Modifier
                     .height(50.dp)
                     .width(120.dp)

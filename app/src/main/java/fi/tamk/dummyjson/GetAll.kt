@@ -1,12 +1,8 @@
 package fi.tamk.dummyjson
 
-import android.content.Intent
-import androidx.core.content.ContextCompat.startActivity
 import com.google.gson.Gson
-import com.google.gson.JsonArray
 import okhttp3.*
 import java.io.IOException
-import com.google.gson.JsonObject
 
 class GetAll {
     data class User(
@@ -18,10 +14,9 @@ class GetAll {
         // Add other properties as needed
     )
 
-    fun getData(){
+    fun getData(onDataReceived: (String) -> Unit) {
         val client = OkHttpClient()
         val url = "https://dummyjson.com/users"
-
 
         val request = Request.Builder()
             .url(url)
@@ -33,25 +28,8 @@ class GetAll {
                 if (response.isSuccessful) {
                     val gson = Gson()
                     val jsonResponse = response.body?.string()
-                    val responseJson = gson.fromJson(jsonResponse, JsonObject::class.java)
-
-                    val usersJsonArray = responseJson.getAsJsonArray("users")
-                    val userList = mutableListOf<User>()
-
-                    usersJsonArray?.let {
-                        for (jsonElement in it) {
-                            val userJson = jsonElement.asJsonObject
-                            val user = gson.fromJson(userJson, User::class.java)
-                            userList.add(user)
-                            return userList
-                        }
-                    }
-
-
-
-
-
-
+                        ?: "" // Provide a default value for null response body
+                    onDataReceived(jsonResponse) // Pass the response to the callback
                 } else {
                     // Handle unsuccessful response
                 }

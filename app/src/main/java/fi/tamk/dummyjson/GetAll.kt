@@ -10,7 +10,6 @@ class GetAll {
         val firstName: String,
         val lastName: String,
         val age: Int,
-        val email: String,
         // Add other properties as needed
     )
 

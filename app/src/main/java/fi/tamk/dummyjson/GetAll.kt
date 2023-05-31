@@ -10,7 +10,6 @@ class GetAll {
         val firstName: String,
         val lastName: String,
         val age: Int,
-        // Add other properties as needed
     )
 
     fun getData(onDataReceived: (String) -> Unit) {
@@ -25,17 +24,22 @@ class GetAll {
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
+                    // Create an instance of Gson for JSON parsing
                     val gson = Gson()
-                    val jsonResponse = response.body?.string()
-                        ?: "" // Provide a default value for null response body
-                    onDataReceived(jsonResponse) // Pass the response to the callback
+                    // Get the response body as a string, providing a default
+                    // empty string if it's null
+                    val jsonResponse = response.body?.string() ?: ""
+                    // Pass the JSON response to the onDataReceived callback
+                    onDataReceived(jsonResponse)
                 } else {
                     // Handle unsuccessful response
+                    print("Unsuccessful response: ${response.code}")
                 }
             }
 
             override fun onFailure(call: Call, e: IOException) {
                 // Handle network errors
+                print("Network error: ${e.message}")
             }
         })
     }

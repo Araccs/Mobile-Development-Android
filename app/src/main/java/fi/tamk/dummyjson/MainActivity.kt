@@ -44,7 +44,10 @@ fun MyApp(onGetUserData: (String) -> Unit) {
         ) {
             Button(
                 onClick = {
+                    // When the "Get all user data" button is clicked, call the getData function of
+                    // the GetAll class
                     GetAll().getData { userData ->
+                        // Pass the received user data to the onGetUserData callback
                         onGetUserData(userData)
                     }
                 },
@@ -57,6 +60,7 @@ fun MyApp(onGetUserData: (String) -> Unit) {
             OutlinedTextField(
                 value = textValue,
                 onValueChange = { newValue ->
+                    // Update the textValue variable with the new value entered in the text field
                     textValue = newValue
                 },
                 label = { Text("Enter search term here") },
@@ -70,10 +74,14 @@ fun MyApp(onGetUserData: (String) -> Unit) {
             Spacer(modifier = Modifier.height(15.dp))
 
             Button(
-                onClick = { GetBySearch().getSearchData(textValue) { userData ->
-                    onGetUserData(userData)
-                }
-                          },
+                onClick = {
+                    // When the "Search users" button is clicked, call the getSearchData function
+                    // of the GetBySearch class
+                    GetBySearch().getSearchData(textValue) { userData ->
+                        // Pass the received user data to the onGetUserData callback
+                        onGetUserData(userData)
+                    }
+                },
                 modifier = Modifier
                     .height(50.dp)
                     .width(120.dp)
@@ -83,6 +91,7 @@ fun MyApp(onGetUserData: (String) -> Unit) {
         }
     }
 }
+
 
 
 

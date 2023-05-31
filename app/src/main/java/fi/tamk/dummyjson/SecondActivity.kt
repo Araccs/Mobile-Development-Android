@@ -1,9 +1,9 @@
 package fi.tamk.dummyjson
+
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.google.gson.Gson
-import com.google.gson.JsonObject
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,13 +12,18 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 
 class SecondActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +57,7 @@ class SecondActivity : AppCompatActivity() {
         }
     }
 }
+
 private fun getNextUserId(userList: List<GetAll.User>): Int {
     val maxId = userList.maxOfOrNull { it.id } ?: 0
     return maxId + 1
@@ -72,7 +78,8 @@ fun UserListScreen(userList: List<GetAll.User>) {
             Button(
                 onClick = {
                     val nextUserId = getNextUserId(filteredUserList.value)
-                    editedUser = GetAll.User(nextUserId, "", "", 0) // Create a new user with default values
+                    editedUser = GetAll.User(nextUserId, "", "", 0)
+                    // Create a new user with default values
                     filteredUserList.value += editedUser!! // Add the new user to the list
                 },
                 modifier = Modifier.align(Alignment.End)
@@ -89,20 +96,15 @@ fun UserListScreen(userList: List<GetAll.User>) {
                             Text(text = "Last Name: ${user.lastName}")
                             Text(text = "Age: ${user.age}")
                             Spacer(modifier = Modifier.height(10.dp))
-                            // Add more Text elements for other properties as needed
-                            Button(
-                                onClick = {
-                                    filteredUserList.value = filteredUserList.value.filterNot { it.id == user.id }
-                                }
-                            ) {
-                                Text("Delete User")
-                            }
-                            Button(
-                                onClick = {
+                            Row(modifier = Modifier.fillMaxWidth()) {
+                                IconButton(icon = Icons.Default.Delete, onClick = {
+                                    filteredUserList.value =
+                                        filteredUserList.value.filterNot { it.id == user.id }
+                                }, modifier = Modifier.padding(end = 8.dp))
+
+                                IconButton(icon = Icons.Default.Edit, onClick = {
                                     editedUser = user
-                                }
-                            ) {
-                                Text("Edit User")
+                                })
                             }
                         }
                     }
@@ -123,6 +125,16 @@ fun UserListScreen(userList: List<GetAll.User>) {
     }
 }
 
+@Composable
+fun IconButton(icon: ImageVector, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    Button(onClick = onClick, modifier = modifier) {
+        Image(
+            imageVector = icon,
+            contentDescription = null, // Provide a meaningful description if needed
+            modifier = Modifier.size(24.dp)
+        )
+    }
+}
 
 @Composable
 fun EditUserScreen(user: GetAll.User, onUserUpdated: (GetAll.User) -> Unit) {
@@ -160,7 +172,7 @@ fun EditUserScreen(user: GetAll.User, onUserUpdated: (GetAll.User) -> Unit) {
                 label = { Text("Age") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
-            // Add more TextField elements for other user properties
+
 
             Button(
                 onClick = {
@@ -170,7 +182,7 @@ fun EditUserScreen(user: GetAll.User, onUserUpdated: (GetAll.User) -> Unit) {
                         firstName = firstName,
                         lastName = lastName,
                         age = age
-                        // Add other properties as needed
+
                     )
                     onUserUpdated(newUser) // Pass the new user data back to the UserListScreen
                 },
@@ -181,5 +193,6 @@ fun EditUserScreen(user: GetAll.User, onUserUpdated: (GetAll.User) -> Unit) {
         }
     }
 }
+
 
 
